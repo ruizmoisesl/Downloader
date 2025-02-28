@@ -8,8 +8,6 @@ app = Flask(__name__)
 DOWNLOAD_FOLDER = "downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-FFMPEG_PATH = os.path.abspath("bin/ffmpeg/bin/ffmpeg.exe")
-os.environ["PATH"] += os.pathsep + os.path.dirname(FFMPEG_PATH)
 
 def limpiar_carpeta():
     for archivo in os.listdir(DOWNLOAD_FOLDER):
