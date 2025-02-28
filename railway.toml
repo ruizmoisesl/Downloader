@@ -1,0 +1,8 @@
+[build]
+  builder = "Nixpacks"
+
+[deploy]
+  install = [
+    "apt-get update",
+    "apt-get install -y ffmpeg"
+  ]
