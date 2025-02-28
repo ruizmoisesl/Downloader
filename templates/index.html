@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpotDL Web</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Descargar Musca</h1>
+    
+    <input type="text" id="spotify-url" placeholder="Pega el enlace de Spotify aquí">
+    <button onclick="descargar()">Descargar</button>
+    
+    <p id="status"></p>
+    <div id="descargas" style="display: none;"> 
+        <a id="descargar-link"  download>⬇️ Descargar Ultima Canción</a>
+        <a href="/descargar_todo">📁 Descargar todas las canciones (ZIP)</a>
+    </div>
+    <br><br>
+
+    <script>
+        function descargar() {
+            let url = document.getElementById("spotify-url").value;
+            let status = document.getElementById("status");
+            let link = document.getElementById("descargar-link")
+            let carpeta = document.getElementById("descargas");
+
+            if (!url) {
+                status.textContent = "⚠️ Ingresa un enlace de Spotify.";
+                return;
+            }
+
+            status.textContent = "⏳ Descargando...";
+            link.style.display = "none";  
+
+            fetch("/download", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url: url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    status.textContent = "❌ Error: " + data.error;
+                } else {
+                    status.textContent = "✅ Descarga completada.";
+                    link.href = data.file_url;
+                    carpeta.style.display = "block";
+                    link.textContent = "⬇️ Descargar Canción";
+                }
+            })
+            .catch(error => {
+                status.textContent = "❌ Error en la descarga.";
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>
