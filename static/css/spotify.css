@@ -1,12 +1,24 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    background-color: #f4f4f4;
-    padding: 20px;
+    background-color: #121212;
+}
+
+.ypdl{
+    display: none;
+}
+
+header{
+    background-color: #121212;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+    nav a{
+        color: #fff;
+    }
 }
 
 h1 {
-    color: #333;
+    color: #fff;
 }
 
 input {
@@ -14,14 +26,39 @@ input {
     max-width: 400px;
     padding: 10px;
     margin: 10px 0;
-    border: 2px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    border: none;
+    background: none;
+    box-shadow: 0 0 10px white;
+    outline: 2px solid white;
+    color: white;
+
+    &::placeholder {
+        color: #ddd;
+        
+    }
+}
+
+
+section{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.spotdl{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 button {
     background-color: #28a745;
     color: white;
+    font-weight: bold;
     border: none;
     padding: 10px 20px;
     font-size: 16px;

@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+}
+
+header nav a{
+    align-items: center;
+    text-decoration: none;
+    text-align: center;
+    color: #000;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img{
+        width: 90px;
+        object-fit: contain;
+        border-radius: 50%;
+    }
+}
+
+section{
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1{
+        font-size: 2.5em;
+        font-weight: bold;
+        margin: 10px;
+        text-transform: uppercase;
+        margin-bottom: 100px;
+    }
+}
+
+section .links a{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    color: #ffff;
+    text-decoration: none;
+    text-align: center;
+    margin: 10px;
+    border-radius: 20px;
+    transition: all 0.5s ease-in-out;
+
+    &:hover{
+        transform: scale(0.9);
+    }
+
+    img{
+        width: 20%;
+        object-fit: contain;
+    }
+
+
+}
+
+section .links {
+
+    display: flex;
+    flex-direction: row;
+
+    .spotify{
+        background: #1ed760;
+    }
+
+    .youtube{
+        background: #FF0000;
+    }
+
+    .soundcloud{
+        background: #000;
+    }
+}
+
+
+
+@font-face {
+    font-family: 'alfa slab one';
+    src: url(../fonts/alfa-slab-one.woff) format('woff');
+}
+
+@font-face {
+    font-family: 'Gotham';
+    src: url(../fonts/GothamBold.ttf) format('truetype');
+}
