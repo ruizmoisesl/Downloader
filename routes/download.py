@@ -13,7 +13,7 @@ def download():
         return jsonify({"error": "No se proporcionó una URL"}), 400
 
     try:
-        subprocess.run(["spotdl", url, "--output", DOWNLOAD_FOLDER], check=True)
+        subprocess.run(["spotdl","--yp-dlp", url, "--output", DOWNLOAD_FOLDER], check=True)
         archivos = [f for f in os.listdir(DOWNLOAD_FOLDER) if f.endswith(".mp3")]
         if not archivos:
             return jsonify({"error": "No se encontró el archivo descargado"}), 500
