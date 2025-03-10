@@ -9,15 +9,20 @@
     <title>MRZ DOWNLOADER</title>
 </head>
 <body>
-
     {% include 'components/header.html'   %}
+
+    <div class="name">
+        <img src="{{ url_for('static', filename='img/spotify.png') }}" alt="spotify Logo">
+        <h1>SPOTIFY DOWNLOADER</h1>
+    </div>
+
     <section>
 
-        <h1>Descargar Musica</h1>
+        <h1>Download Music</h1>
 
         {% include 'components/buscador.html' %}
     
-        <p id="status"></p>
+        <p id="status" style="display: none;"></p>
         <div id="descargas" style="display: none;">
             <a id="descargar-link" download>⬇️ Descargar Ultima Canción</a>
             <a href="/descargar_todo">📁 Descargar todas las canciones (ZIP)</a>

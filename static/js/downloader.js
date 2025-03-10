@@ -5,11 +5,13 @@ function descargar_spdl() {
     let carpeta = document.getElementById("descargas");
 
     if (!url) {
-        status.textContent = "⚠️ Ingresa un enlace valido";
+        status.style.display = "block";
+        status.textContent = "⚠️ Enter a valid link";
         return;
     }
 
-    status.textContent = "⏳ Descargando...";
+    status.style.display = "block";
+    status.textContent = "⏳ Downloading...";
      
 
     fetch("/download-spdl", {
@@ -20,16 +22,16 @@ function descargar_spdl() {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            status.textContent = "❌ Error: " + data.error;
+            status.textContent = "❌ Mistake: " + data.error;
         } else {
-            status.textContent = "✅ Descarga completada.";
+            status.textContent = "✅ Download completed.";
             link.href = data.file_url;
-            carpeta.style.display = "block";
-            link.textContent = "⬇️ Descargar Canción";
+            carpeta.style.display = "flex";
+            link.textContent = "⬇️ Download Song";
         }
     })
     .catch(error => {
-        status.textContent = "❌ Error en la descarga.";
+        status.textContent = "❌ Download failed.";
         console.error(error);
     });
 }
@@ -41,11 +43,13 @@ function descargar_ypdl() {
     let carpeta = document.getElementById("descargas");
 
     if (!url) {
-        status.textContent = "⚠️ Ingresa un enlace valido";
+        status.style.display = "block";
+        status.textContent = "⚠️ Enter a valid link";
         return;
     }
 
-    status.textContent = "⏳ Descargando...";
+    status.style.display = "block";
+    status.textContent = "⏳ Downloading...";
      
 
     fetch("/download-ypdl", {
@@ -56,16 +60,16 @@ function descargar_ypdl() {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            status.textContent = "❌ Error: " + data.error;
+            status.textContent = "❌ Mistake: " + data.error;
         } else {
-            status.textContent = "✅ Descarga completada.";
+            status.textContent = "✅ Download completed.";
             link.href = data.file_url;
             carpeta.style.display = "block";
-            link.textContent = "⬇️ Descargar Canción";
+            link.textContent = "⬇️ Download Song";
         }
     })
     .catch(error => {
-        status.textContent = "❌ Error en la descarga.";
+        status.textContent = "❌ Download failed.";
         console.error(error);
     });
 }

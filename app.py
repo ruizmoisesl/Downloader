@@ -22,6 +22,7 @@ def index_route():
 
 @app.route('/spotify-downloader', methods=["GET", "POST"])
 def spotify_downloader():
+    limpiar_carpeta()
     return interfaces.spotify()
 
 @app.route("/download-spdl", methods=["POST"])
