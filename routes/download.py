@@ -4,7 +4,7 @@ import os
 import shutil
 
 DOWNLOAD_FOLDER = "downloads"
-FFMPEG_PATH = os.path.abspath(os.path.join("ffmpeg","bin","ffmpeg.exe"))
+FFMPEG_PATH = os.path.abspath(os.path.join("root",".spotdl","ffmpeg"))
 
 def download_spdl():
     data = request.get_json()
