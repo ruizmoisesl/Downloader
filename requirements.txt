@@ -3,4 +3,5 @@ flask_cors
 gunicorn
 requests
 spotdl
+yt-dlp
 virtualenv

@@ -22,12 +22,23 @@ def index_route():
 
 @app.route('/spotify-downloader', methods=["GET", "POST"])
 def spotify_downloader():
-    limpiar_carpeta()
     return interfaces.spotify()
+
+@app.route('/youtube-downloader', methods=["GET", "POST"])
+def youtube_downloader():
+    return interfaces.youtube()
+
+@app.route('/soundcloud-downloader', methods=["GET", "POST"])
+def method_name():
+    return interfaces.soundcloud()
 
 @app.route("/download-spdl", methods=["POST"])
 def download_route():
-    return download.download()
+    return download.download_spdl()
+
+@app.route('/download-ytdl', methods=["POST"])
+def download_youtube():
+    return download.download_ytdl()
 
 @app.route("/descargar/<filename>")
 def descargar_archivo(filename):

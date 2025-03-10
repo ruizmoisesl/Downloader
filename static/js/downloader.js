@@ -37,7 +37,7 @@ function descargar_spdl() {
 }
 
 function descargar_ypdl() {
-    let url = document.getElementById("spotify-url").value;
+    let url = document.getElementById("ypdl-url").value;
     let status = document.getElementById("status");
     let link = document.getElementById("descargar-link")
     let carpeta = document.getElementById("descargas");
@@ -52,7 +52,7 @@ function descargar_ypdl() {
     status.textContent = "⏳ Downloading...";
      
 
-    fetch("/download-ypdl", {
+    fetch("/download-ytdl", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: url })
@@ -64,7 +64,7 @@ function descargar_ypdl() {
         } else {
             status.textContent = "✅ Download completed.";
             link.href = data.file_url;
-            carpeta.style.display = "block";
+            carpeta.style.display = "flex";
             link.textContent = "⬇️ Download Song";
         }
     })
