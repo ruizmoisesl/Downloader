@@ -4,7 +4,6 @@ import os
 import shutil
 
 DOWNLOAD_FOLDER = "downloads"
-FFMPEG_PATH = os.path.abspath(os.path.join("ffmpeg"))
 
 def download_spdl():
     data = request.get_json()
@@ -36,8 +35,7 @@ def download_ytdl():
         return jsonify({"error": "No se proporcionó una URL"}), 400
 
     try:
-        print(FFMPEG_PATH)
-        subprocess.run(["yt-dlp", "-P", DOWNLOAD_FOLDER, "-x", "--audio-format", "mp3","--ffmpeg-location",FFMPEG_PATH,url], check=True)
+        subprocess.run(["yt-dlp", "-P", DOWNLOAD_FOLDER, "-x", "--audio-format", "mp3",url], check=True)
         archivos = [f for f in os.listdir(DOWNLOAD_FOLDER) if f.endswith(".mp3")]
         if not archivos:
             return jsonify({"error": "No se encontró el archivo descargado"}), 500
