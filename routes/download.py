@@ -4,7 +4,7 @@ import os
 import shutil
 
 DOWNLOAD_FOLDER = "downloads"
-FFMPEG_PAHT = '/bin/ffmpeg'
+FFMPEG_PAHT = '/root/.spotdl/ffmpeg'
 
 def download_spdl():
     data = request.get_json()
