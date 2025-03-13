@@ -10,4 +10,13 @@
         <a href="/youtube-downloader" class="youtubeD">YOUTUBE</a>
         <a href="/soundcloud-downloader" class="soundcloudD">SOUNDCLOUD</a> 
     </nav>
+    <button id="menu-black"><img src="{{ url_for('static', filename='img/menu.svg') }}" alt=""></button>
+    <button id="menu-white"><img src="{{ url_for('static', filename='img/menu white.svg') }}" alt=""></button>
+
+    <div class="menu hidden">
+        <a href="/spotify-downloader" class="spotify">SPOTIFY</a>
+        <a href="/youtube-downloader" class="youtube">YOUTUBE</a>
+        <a href="/soundcloud-downloader" class="soundcloud">SOUNDCLOUD</a>
+    </div>
+    <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
 </header>
