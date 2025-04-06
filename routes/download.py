@@ -36,7 +36,7 @@ def download_ytdl():
         return jsonify({"error": "No se proporcionó una URL"}), 400
 
     try:
-        subprocess.run(["yt-dlp", "-P", DOWNLOAD_FOLDER, "-x", "--audio-format", "mp3","--ffmpeg-location",FFMPEG_PAHT,url], check=True)
+        subprocess.run(["yt-dlp", "-P", DOWNLOAD_FOLDER, "-x", "--audio-format", "mp3","--no-playlist","--ffmpeg-location",FFMPEG_PAHT,url], check=True)
         archivos = [f for f in os.listdir(DOWNLOAD_FOLDER) if f.endswith(".mp3")]
         if not archivos:
             return jsonify({"error": "No se encontró el archivo descargado"}), 500
