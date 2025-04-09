@@ -5,18 +5,45 @@
             <h1>MRZDOWNLOADER</h1>
         </a>
     </div>
+    {% if not session_user %}    
     <nav>
-        <a href="/spotify-downloader" class="spotifyD">SPOTIFY</a>
-        <a href="/youtube-downloader" class="youtubeD">YOUTUBE</a>
-        <a href="/soundcloud-downloader" class="soundcloudD">SOUNDCLOUD</a> 
+        <select name="downloader" id="downloader" class="styled-select">
+            <option value="/spotify-downloader" class="spotifyD">SPOTIFY</option>
+            <option value="/youtube-downloader" class="youtubeD">YOUTUBE</option>
+            <option value="/soundcloud-downloader" class="soundcloudD">SOUNDCLOUD</option>
+        </select>
+        <button id="login-button">Login</button>
+        <button id="register-button">Register</button>
     </nav>
+    {% else %}
+    <nav>
+        <select name="downloader" id="downloader" class="styled-select">
+            <option value="/spotify-downloader" class="spotifyD">SPOTIFY</option>
+            <option value="/youtube-downloader" class="youtubeD">YOUTUBE</option>
+            <option value="/soundcloud-downloader" class="soundcloudD">SOUNDCLOUD</option>
+        </select>
+        <p>{{session_user[1]}}</p>
+        <a href="/logout">LOGOUT</a>
+    </nav>
+    {% endif %}
+
     <button id="menu-black"><img src="{{ url_for('static', filename='img/menu.svg') }}" alt=""></button>
     <button id="menu-white"><img src="{{ url_for('static', filename='img/menu white.svg') }}" alt=""></button>
 
+    {% if not session_user %}
     <div class="menu hidden">
         <a href="/spotify-downloader" class="spotify">SPOTIFY</a>
         <a href="/youtube-downloader" class="youtube">YOUTUBE</a>
         <a href="/soundcloud-downloader" class="soundcloud">SOUNDCLOUD</a>
+        <button id="login-button2">Login</button>
+        <button id="register-button2">Register</button>
     </div>
-    <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
-</header>
+    {% else %}
+    <div class="menu hidden">
+        <a href="/spotify-downloader" class="spotify">SPOTIFY</a>
+        <a href="/youtube-downloader" class="youtube">YOUTUBE</a>
+        <a href="/soundcloud-downloader" class="soundcloud">SOUNDCLOUD</a>
+
+    </div>
+    {% endif %}
+    </header>

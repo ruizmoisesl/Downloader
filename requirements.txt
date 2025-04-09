@@ -4,4 +4,3 @@ gunicorn
 requests
 spotdl
 yt-dlp
-ffmpeg-python

@@ -1,16 +1,10 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/LOGO.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
-    <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
-    <title>MRZ DOWNLOADER</title>
-</head>
-<body>
-    {% include 'components/header.html'   %}
+{% extends "base.html" %}
 
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
     <section>
         <h1>Elige Tu Plataforma</h1>
 
@@ -28,6 +22,13 @@
                 <h2>SOUNDCLOUD</h2>
             </a>
         </div>
+
+        <div class="info">
+            {% if session_user %}
+            <h3>Tu carpeta fue creada.</h3>
+            {% else %}
+            <h3>Al registrarse o al iniciar sesion se crea una carpeta personal, lo que facilita la descarga de las canciones y lo hace mas agil.</h3>
+            {% endif %}
+        </div>
     </section>
-</body>
-</html>
+{% endblock %}

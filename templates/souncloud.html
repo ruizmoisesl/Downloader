@@ -1,30 +1,27 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/LOGO.png') }}" type="image/x-icon">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/soundcloud.css') }}">
-    <title>MRZ DOWNLOADER</title>
-</head>
-<body>
-    {% include 'components/header.html'   %}
+{% extends "base.html" %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/soundcloud.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+{% endblock %}
+
+{% block content %}
     <div class="name">
-        <img src="{{ url_for('static', filename='img/soundcloud.png') }}" alt="spotify Logo">
+        <img src="{{ url_for('static', filename='img/soundcloud.png') }}" alt="soundcloud Logo">
         <h1>{{name.upper()}} DOWNLOADER</h1>
     </div>
 
     <section>
-
         <h1>Download Music</h1>
 
         {% include 'components/buscador.html' %}
     
         <p id="status" style="display: none;"></p>
         <div id="descargas" style="display: none;">
-            <a id="descargar-link" download>⬇️ Download Song</a>
+            <a id="descargar-link" href="/descargar" download>⬇️ Download Song</a>
             <a href="/descargar_todo">📁 Download all songs (ZIP)</a>
         </div>
         <br><br>
@@ -33,5 +30,4 @@
 
 
     <script src="{{ url_for('static', filename='js/downloader.js') }}"></script>
-</body>
-</html>
+{% endblock %}
