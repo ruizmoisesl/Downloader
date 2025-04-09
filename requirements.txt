@@ -5,4 +5,4 @@ mysql-connector-python
 requests
 spotdl
 yt-dlp
-dotenv
+python-dotenv
