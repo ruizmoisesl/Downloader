@@ -1,6 +1,7 @@
 flask
 flask_cors
 gunicorn
+mysql-connector-python
 requests
 spotdl
 yt-dlp
