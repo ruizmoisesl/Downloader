@@ -12,7 +12,7 @@ import shutil
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DOWNLOAD_FOLDER = os.path.join(BASE_DIR, "downloads")
 CACHE_FOLDER = os.path.join(BASE_DIR, "cache")
-FFMPEG_PATH = "bin/ffmpeg"
+FFMPEG_PATH = "bin/.spotdl/ffmpeg"
 MAX_CACHE_AGE = 24 * 60 * 60  # 24 horas en segundos
 MAX_WORKERS = 4
 
