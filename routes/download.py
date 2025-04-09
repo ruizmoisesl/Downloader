@@ -12,7 +12,7 @@ import shutil
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DOWNLOAD_FOLDER = os.path.join(BASE_DIR, "downloads")
 CACHE_FOLDER = os.path.join(BASE_DIR, "cache")
-FFMPEG_PATH = "usr/bin/ffmpeg"
+FFMPEG_PATH = "bin/ffmpeg"
 MAX_CACHE_AGE = 24 * 60 * 60  # 24 horas en segundos
 MAX_WORKERS = 4
 
@@ -202,7 +202,7 @@ def download_spdl(session_user):
             return jsonify({"error": f"No se pudo crear el directorio de usuario: {str(e)}"}), 500
 
         # Verificar que ffmpeg esté en el PATH
-        ffmpeg_path = os.path.join(FFMPEG_PATH, "ffmpeg")
+        ffmpeg_path = os.path.join(FFMPEG_PATH)
         print(f"[spotdl] Ruta de ffmpeg: {ffmpeg_path}")
         if not os.path.exists(ffmpeg_path):
             return jsonify({"error": f"ffmpeg no encontrado en {ffmpeg_path}"}), 500
@@ -313,7 +313,7 @@ def download_spdl(session_user):
         
         # Verificar el estado de ffmpeg
         try:
-            subprocess.run([os.path.join(FFMPEG_PATH, "ffmpeg.exe"), "-version"], check=True)
+            subprocess.run([os.path.join(FFMPEG_PATH), "-version"], check=True)
         except Exception as ffmpeg_error:
             print(f"[spotdl] Error adicional al verificar ffmpeg: {str(ffmpeg_error)}")
         
