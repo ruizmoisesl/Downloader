@@ -167,130 +167,27 @@ def download_ytdl(session_user):
             "file_url": f"/descargar/{filename}"
         }), 200
 
-    except Exception as e:
-        return jsonify({"error": f"Error al descargar la canción: {str(e)}"}), 500
+    except subprocess.CalledProcessError:
+        return jsonify({"error": "Error al descargar la canción"}), 500
+    
+def download_ytdl():
+    data = request.get_json()
+    url = data.get("url")
 
-def download_spdl(session_user):
-    """Manejador de descargas de Spotify"""
+    if not url:
+        return jsonify({"error": "No se proporcionó una URL"}), 400
+
     try:
-        print("[spotdl] Iniciando descarga de Spotify...")
-        print(f"[spotdl] Datos de sesión: {session_user}")
+        subprocess.run(["yt-dlp", "-P", DOWNLOAD_FOLDER, "-x", "--audio-format", "mp3","--ffmpeg-location",FFMPEG_PAHT,url], check=True)
+        archivos = [f for f in os.listdir(DOWNLOAD_FOLDER) if f.endswith(".mp3")]
+        if not archivos:
+            return jsonify({"error": "No se encontró el archivo descargado"}), 500
 
-        # Validar request
-        if not request.is_json:
-            return jsonify({"error": "Se requiere JSON en el request"}), 400
-
-        data = request.get_json()
-        url = data.get("url")
-        print(f"[spotdl] URL recibida: {url}")
-        
-        if not url:
-            return jsonify({"error": "No se proporcionó una URL"}), 400
-            
-        if not url.startswith(('https://open.spotify.com/', 'spotify:')):
-            return jsonify({"error": "URL inválida. Debe ser una URL de Spotify"}), 400
-
-        # Preparar directorio
-        try:
-            user_folder = get_user_folder(session_user)
-            print(f"[spotdl] Carpeta del usuario: {user_folder}")
-            if not os.path.exists(user_folder):
-                os.makedirs(user_folder, exist_ok=True)
-                print(f"[spotdl] Carpeta creada: {user_folder}")
-        except Exception as e:
-            print(f"[spotdl] Error al crear carpeta: {str(e)}")
-            return jsonify({"error": f"No se pudo crear el directorio de usuario: {str(e)}"}), 500
-
-        # Verificar que ffmpeg esté en el PATH
-        ffmpeg_path = os.path.join(FFMPEG_PATH, "ffmpeg")
-        print(f"[spotdl] Ruta de ffmpeg: {ffmpeg_path}")
-        if not os.path.exists(ffmpeg_path):
-            return jsonify({"error": f"ffmpeg no encontrado en {ffmpeg_path}"}), 500
-
-        # Configurar el entorno para spotdl
-        env = os.environ.copy()
-        env["PATH"] = FFMPEG_PATH + os.pathsep + env.get("PATH", "")
-        print(f"[spotdl] PATH actualizado: {env['PATH']}")
-
-        # Verificar spotdl con el PATH actualizado
-        try:
-            print("[spotdl] Verificando instalación de spotdl...")
-            version_process = subprocess.run(
-                ["spotdl", "--version"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                env=env,
-                text=True,
-                check=True
-            )
-            print(f"[spotdl] Versión instalada: {version_process.stdout.strip()}")
-        except subprocess.CalledProcessError as e:
-            print(f"[spotdl] Error al verificar spotdl: {e.stderr}")
-            return jsonify({
-                "error": "Error al verificar spotdl",
-                "details": e.stderr
-            }), 500
-        except FileNotFoundError as e:
-            print(f"[spotdl] spotdl no encontrado: {str(e)}")
-            return jsonify({"error": "spotdl no está instalado. Por favor, instale spotdl usando: pip install spotdl"}), 500
-
-        # Iniciar proceso de descarga con configuración mejorada
-        print(f"[spotdl] Iniciando descarga de: {url}")
-        try:
-            command = [
-                "spotdl",
-                url,
-                "--output", user_folder,
-                "--format", "mp3",
-                "--bitrate", "320k",
-                "--ffmpeg", ffmpeg_path,
-                "--log-level", "DEBUG",
-                "--output-format", "{title}",
-                "--restrict",
-                "--no-clean-up"  # Mantener archivos temporales por si hay error
-            ]
-            print(f"[spotdl] Comando a ejecutar: {' '.join(command)}")
-            process = subprocess.Popen(
-                command,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                env=env,
-                text=True
-            )
-        except Exception as e:
-            print(f"[spotdl] Error al iniciar el proceso: {str(e)}")
-            return jsonify({"error": f"Error al iniciar el proceso de descarga: {str(e)}"}), 500
-        
-        try:
-            stdout, stderr = process.communicate(timeout=120)  # 2 minutos de timeout
-            print("Salida de spotdl:")
-            print("STDOUT:", stdout)
-            print("STDERR:", stderr)
-            
-            if process.returncode != 0:
-                return jsonify({
-                    "error": "Error en la descarga",
-                    "stdout": stdout.strip(),
-                    "stderr": stderr.strip()
-                }), 500
-
-            # Buscar archivo descargado
-            archivos = [f for f in os.listdir(user_folder) if f.endswith(".mp3")]
-            archivos.sort(key=lambda x: os.path.getmtime(os.path.join(user_folder, x)), reverse=True)
-            
-            if not archivos:
-                return jsonify({
-                    "error": "No se encontró el archivo descargado",
-                    "stdout": stdout.strip(),
-                    "stderr": stderr.strip(),
-                    "files_in_directory": os.listdir(user_folder)
-                }), 500
-
-            return jsonify({
-                "message": "Descarga completada",
-                "file_url": f"/descargar/{archivos[0]}",
-                "file_size": os.path.getsize(os.path.join(user_folder, archivos[0]))
-            }), 200
+        archivo_mp3 = archivos[0]
+        return jsonify({
+            "message": "Descarga completada",
+            "file_url": f"/descargar/{archivo_mp3}"
+        }), 200
 
         except subprocess.TimeoutExpired:
             process.kill()
