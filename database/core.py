@@ -69,17 +69,46 @@ class DatabaseManager:
 
     @classmethod
     def _setup_pool(cls):
-        """Configurar el pool de conexiones"""
-        try:
-            cls._pool = mysql.connector.pooling.MySQLConnectionPool(
-                pool_name=DB_CONFIG['pool_name'],
-                pool_size=DB_CONFIG['pool_size'],
-                **{k: v for k, v in DB_CONFIG.items() if k not in ['pool_name', 'pool_size']}
-            )
-            logger.info("Connection pool created successfully")
-        except Error as e:
-            logger.error(f"Error creating connection pool: {e}")
-            raise DatabaseError(f"Failed to create connection pool: {e}")
+        """Configurar el pool de conexiones con reintentos"""
+        max_retries = 3
+        retry_delay = 5
+        last_error = None
+
+        for attempt in range(max_retries):
+            try:
+                if cls._pool is not None:
+                    try:
+                        cls._pool.close()
+                    except:
+                        pass
+                    cls._pool = None
+
+                config = {k: v for k, v in DB_CONFIG.items() if k not in ['pool_name', 'pool_size']}
+                cls._pool = mysql.connector.pooling.MySQLConnectionPool(
+                    pool_name=DB_CONFIG['pool_name'],
+                    pool_size=DB_CONFIG['pool_size'],
+                    **config
+                )
+                
+                # Verificar la conexión
+                with cls._pool.get_connection() as test_conn:
+                    with test_conn.cursor() as cursor:
+                        cursor.execute('SELECT 1')
+                        cursor.fetchone()
+                
+                logger.info("Connection pool created and verified successfully")
+                return
+                
+            except Error as e:
+                last_error = e
+                logger.warning(f"Attempt {attempt + 1}/{max_retries} failed: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay)
+                    continue
+                
+        error_msg = f"Failed to create connection pool after {max_retries} attempts. Last error: {last_error}"
+        logger.error(error_msg)
+        raise DatabaseError(error_msg)
 
     @contextmanager
     def get_connection(self):
