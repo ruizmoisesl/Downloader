@@ -18,9 +18,15 @@ DB_CONFIG = {
     'database': os.getenv('DB_NAME', 'railway'),
     'port': int(os.getenv('DB_PORT', '10662')),
     'pool_name': 'mypool',
-    'pool_size': 5,
-    'connect_timeout': 10,
-    'time_zone': '+00:00'
+    'pool_size': 3,  # Reduced pool size for better stability
+    'connect_timeout': 30,  # Increased timeout
+    'connection_timeout': 30,  # Additional timeout setting
+    'time_zone': '+00:00',
+    'get_warnings': True,  # Enable warnings
+    'raise_on_warnings': True,  # Raise on warnings
+    'autocommit': True,  # Enable autocommit
+    'buffered': True,  # Enable buffered cursors by default
+    'consume_results': True  # Consume results automatically
 }
 
 class DatabaseError(Exception):
