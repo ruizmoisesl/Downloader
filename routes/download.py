@@ -241,12 +241,7 @@ def download_spdl(session_user):
                 "spotdl",
                 url,
                 "--output", user_folder,
-                "--format", "mp3",
-                "--bitrate", "320k",
-                "--ffmpeg", ffmpeg_path,
-                "--log-level", "DEBUG",
-                "--paths", "{title}",
-                "--restrict"
+                "--format", "mp3"
             ]
             print(f"[spotdl] Comando a ejecutar: {' '.join(command)}")
             process = subprocess.Popen(
