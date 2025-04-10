@@ -245,9 +245,8 @@ def download_spdl(session_user):
                 "--bitrate", "320k",
                 "--ffmpeg", ffmpeg_path,
                 "--log-level", "DEBUG",
-                "--output-format", "{title}",
-                "--restrict",
-                "--no-clean-up"  # Mantener archivos temporales por si hay error
+                "--paths", "{title}",
+                "--restrict"
             ]
             print(f"[spotdl] Comando a ejecutar: {' '.join(command)}")
             process = subprocess.Popen(
