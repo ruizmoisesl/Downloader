@@ -23,7 +23,7 @@ CACHE_FOLDER = os.path.join(BASE_DIR, "cache")
 
 # Configuración de FFmpeg
 FFMPEG_BIN = "/bin/ffmpeg"
-FFMPEG_PATH = os.path.join(FFMPEG_BIN, "ffmpeg")
+FFMPEG_PATH = os.path.join(FFMPEG_BIN)
 
 # Configurar el PATH para incluir FFmpeg
 os.environ["PATH"] = FFMPEG_BIN + os.pathsep + os.environ.get("PATH", "")
@@ -133,38 +133,39 @@ def get_cached_download(url, user_id):
     return None
 
 def optimize_ydl_opts(user_folder):
-    """Configuración optimizada para yt-dlp con soporte para carátulas"""
+    """Configuración optimizada para yt-dlp con soporte para carátulas y anti-bot"""
     return {
-        
+        # Formato de audio
         "format": "bestaudio[ext=m4a]/bestaudio/best",
         "outtmpl": os.path.join(user_folder, "%(title)s.%(ext)s"),
         
-       
+        # Procesadores de post-descarga
         "postprocessors": [
             {
-                
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "mp3",
                 "preferredquality": "192"
             },
             {   
-                
                 "key": "FFmpegMetadata",
                 "add_metadata": True,
             },
             {
-               
                 "key": "EmbedThumbnail",
-                "already_have_thumbnail": False,  
+                "already_have_thumbnail": False,
             }
         ],
         
+        # Manejo de miniaturas
         "writethumbnail": True,
         "embedthumbnail": True,
-        "update_thumbnail": True,  
-        "write_thumbnail": True,  
+        "update_thumbnail": True,
+        "write_thumbnail": True,
         
+        # Configuración de FFmpeg
         "ffmpeg_location": FFMPEG_PATH,
+        
+        # Configuración anti-bot y optimizaciones
         "quiet": True,
         "no_warnings": True,
         "extract_audio": True,
@@ -172,8 +173,15 @@ def optimize_ydl_opts(user_folder):
         "nocheckcertificate": True,
         "ignoreerrors": True,
         "noplaylist": True,
+        "cookiesfrombrowser": ("chrome",),  # Usar cookies de Chrome
+        "http_headers": {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-us,en;q=0.5",
+            "Sec-Fetch-Mode": "navigate"
+        },
         
-        
+        # Metadatos
         "parse_metadata": [
             "title:%(title)s",
             "artist:%(uploader)s",
@@ -183,8 +191,15 @@ def optimize_ydl_opts(user_folder):
             "comment:Downloaded with MRZDOWNLOADER"
         ],
         "add_metadata": True,
-        "embed_metadata": True,  
-        "write_info_json": True  
+        "embed_metadata": True,
+        "write_info_json": True,
+        
+        # Configuración de red
+        "socket_timeout": 30,
+        "retries": 10,
+        "fragment_retries": 10,
+        "skip_unavailable_fragments": True,
+        "hls_prefer_native": True
     }
 
 def download_file(url, user_folder, cache_path=None, user_id=None, download_id=None):
