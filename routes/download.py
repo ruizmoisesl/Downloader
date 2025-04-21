@@ -22,7 +22,7 @@ DOWNLOAD_FOLDER = os.path.join(BASE_DIR, "downloads")
 CACHE_FOLDER = os.path.join(BASE_DIR, "cache")
 
 # Configuración de FFmpeg
-FFMPEG_BIN = "C:\\Users\\Moises\\Desktop\\ffmpeg\\bin"
+FFMPEG_BIN = "/bin/ffmpeg"
 FFMPEG_PATH = os.path.join(FFMPEG_BIN, "ffmpeg.exe")
 
 # Configurar el PATH para incluir FFmpeg
