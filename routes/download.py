@@ -20,6 +20,7 @@ logger = logging.getLogger(__name__)
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DOWNLOAD_FOLDER = os.path.join(BASE_DIR, "downloads")
 CACHE_FOLDER = os.path.join(BASE_DIR, "cache")
+COOKIES_FILE = os.path.join(BASE_DIR, "cookies.txt")
 
 # Configuración de FFmpeg
 FFMPEG_BIN = "/bin/ffmpeg"
@@ -173,7 +174,7 @@ def optimize_ydl_opts(user_folder):
         "nocheckcertificate": True,
         "ignoreerrors": True,
         "noplaylist": True,
-        "cookiesfrombrowser": ("chrome",),  # Usar cookies de Chrome
+        "cookiefile": COOKIES_FILE,  # Usar archivo de cookies personalizado
         "http_headers": {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
