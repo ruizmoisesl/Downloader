@@ -23,7 +23,7 @@ CACHE_FOLDER = os.path.join(BASE_DIR, "cache")
 
 # Configuración de FFmpeg
 FFMPEG_BIN = "/bin/ffmpeg"
-FFMPEG_PATH = os.path.join(FFMPEG_BIN, "ffmpeg.exe")
+FFMPEG_PATH = os.path.join(FFMPEG_BIN, "ffmpeg")
 
 # Configurar el PATH para incluir FFmpeg
 os.environ["PATH"] = FFMPEG_BIN + os.pathsep + os.environ.get("PATH", "")
