@@ -23,8 +23,8 @@ CACHE_FOLDER = os.path.join(BASE_DIR, "cache")
 COOKIES_FILE = os.path.join(BASE_DIR, "cookies.txt")
 
 # Configuración de FFmpeg
-FFMPEG_BIN = "/bin/ffmpeg"
-FFMPEG_PATH = os.path.join(FFMPEG_BIN)
+FFMPEG_BIN = "/root/.spotdl"
+FFMPEG_PATH = os.path.join(FFMPEG_BIN, "ffmpeg")
 
 # Configurar el PATH para incluir FFmpeg
 os.environ["PATH"] = FFMPEG_BIN + os.pathsep + os.environ.get("PATH", "")
