@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5" >
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark text-white">
+                <div class="card-header text-center border-bottom border-secondary">
+                    <h3><i class="fas fa-user-plus me-2"></i>Registro</h3>
+                </div>
+                <div class="card-body">
+                    <form action="/register" method="post" class="needs-validation" id="register-form" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="username" class="form-label">
+                                    <i class="fas fa-user me-2"></i>Usuario
+                                </label>
+                                <input type="text" 
+                                       class="form-control bg-dark text-white border-secondary" 
+                                       id="username" 
+                                       name="username" 
+                                       required
+                                       placeholder="Ingresa tu nombre de usuario">
+                                <div class="invalid-feedback">Por favor ingresa un nombre de usuario.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope me-2"></i>Correo Electrónico
+                                </label>
+                                <input type="email" 
+                                       class="form-control bg-dark text-white border-secondary" 
+                                       id="email" 
+                                       name="email" 
+                                       required
+                                       placeholder="ejemplo@correo.com">
+                                <div class="invalid-feedback">Por favor ingresa un correo electrónico válido.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock me-2"></i>Contraseña
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" 
+                                           class="form-control bg-dark text-white border-secondary" 
+                                           id="password" 
+                                           name="password" 
+                                           required
+                                           placeholder="Ingresa tu contraseña">
+                                    <button class="btn btn-outline-light" type="button" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback">Por favor ingresa una contraseña.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="password2" class="form-label">
+                                    <i class="fas fa-lock me-2"></i>Confirmar Contraseña
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" 
+                                           class="form-control bg-dark text-white border-secondary" 
+                                           id="password2" 
+                                           name="password2" 
+                                           required
+                                           placeholder="Confirma tu contraseña">
+                                    <button class="btn btn-outline-light" type="button" id="togglePassword2">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="invalid-feedback">Las contraseñas no coinciden.</div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mt-3">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-user-plus me-2"></i>Registrarse
+                            </button>
+                            <a href="/" class="btn btn-outline-light">
+                                <i class="fas fa-arrow-left me-2"></i>Volver
+                            </a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center border-top border-secondary">
+                    <p class="mb-0">¿Ya tienes una cuenta? <a href="#" data-bs-toggle="modal" data-bs-target="#login-modal" class="text-success">Inicia sesión</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Validación del formulario
+document.getElementById('register-form').addEventListener('submit', function(event) {
+    const password = document.getElementById('password');
+    const password2 = document.getElementById('password2');
+    
+    if (!this.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    // Verificar que las contraseñas coincidan
+    if (password.value !== password2.value) {
+        event.preventDefault();
+        password2.setCustomValidity('Las contraseñas no coinciden');
+    } else {
+        password2.setCustomValidity('');
+    }
+    
+    this.classList.add('was-validated');
+});
+
+// Toggle de visibilidad de las contraseñas
+function setupPasswordToggle(buttonId, inputId) {
+    document.getElementById(buttonId).addEventListener('click', function() {
+        const passwordInput = document.getElementById(inputId);
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+}
+
+setupPasswordToggle('togglePassword', 'password');
+setupPasswordToggle('togglePassword2', 'password2');
+</script>
+
+{% endblock %}

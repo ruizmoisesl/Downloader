@@ -45,6 +45,10 @@ header nav a{
     margin: 10px;
 }
 
+header nav a i {
+    color: #000;
+}
+
 .logo{
     display: flex;
     justify-content: center;
@@ -75,6 +79,26 @@ footer p {
 
 footer p:hover {
     opacity: 1;
+}
+
+.download-btn {
+    background-color: #1DB954;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #1ed760;
+}
+
+.download-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 /* Estructura para mantener el footer al final */
@@ -187,64 +211,6 @@ section .links {
     display: none;
 }
 
-
-form{
-    position: fixed;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: white;
-    left: 340px;
-    top: 150px;
-    border-radius: 20px;
-    box-shadow: 0 0 10px black;
-    width: 50%;
-    height: 400px;
-
-    input{
-        width: 300px;
-        padding: 10px;
-        margin: 10px;
-        border-radius: 20px;
-        border: 1px solid black;
-        text-transform: uppercase;
-
-    }
-
-    input[type="submit"]{
-        width: 70%;
-        padding: 10px;
-        margin: 10px;
-        border-radius: 20px;
-        border: none;
-        background: #000;
-        color: #ffff;
-        font-weight: bold;
-        cursor: pointer;
-        transition: all 0.5s ease-in-out;
-        text-transform: uppercase;
-
-        &:hover{
-            background: #5c5b5b;
-        }
-    }   
-
-    div{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-.register-form{
-    display: none;
-}
-
-.login-form{
-    display: none;
-}
-
-
 .login-form div{
     display: flex;
     flex-direction: column;
@@ -283,6 +249,8 @@ header nav button{
         justify-content: space-between;
         align-items: center;
     }
+
+    
 
     section .links{
         flex-direction: column;

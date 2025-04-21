@@ -182,6 +182,14 @@ a:hover {
     section h1{
         font-size: 2em;
     }
+
+    .ypdl {
+        width: 100%;
+    
+        input{
+            width: 200px;
+        }
+    }
 }
 
 @media (max-width: 600px) {
@@ -213,7 +221,11 @@ a:hover {
         margin-top: -15px;
     }
 
-    .ypdl{
-        width: 90%;
+    .ypdl {
+        width: 100%;
+    
+        input{
+            width: 200px;
+        }
     }
 }

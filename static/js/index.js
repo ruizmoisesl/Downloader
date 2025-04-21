@@ -7,6 +7,7 @@ const MENU_STATES = {
     HIDDEN: 'hidden',
     VISIBLE: 'visible'
 };
+
 class MenuHandler {
     constructor() {
         this.menu = document.querySelector('.menu');
@@ -32,41 +33,24 @@ class MenuHandler {
 
 class FormHandler {
     constructor() {
-        this.forms = {
-            login: document.getElementById('login-form'),
-            register: document.getElementById('register-form')
-        };
+        this.loginModal = new bootstrap.Modal(document.getElementById('login-form'));
+        this.registerModal = document.getElementById('register-form');
         this.setupFormButtons();
     }
 
     setupFormButtons() {
-        // Botones principales
-        ['login', 'register'].forEach(type => {
-            document.getElementById(`${type}-button`)?.addEventListener('click', 
-                () => this.toggleForm(type));
+        document.getElementById('login-button')?.addEventListener('click', () => {
+            this.registerModal.hide(); 
+            this.loginModal.show();
         });
 
-        // Botón de login en menú
-        document.getElementById('login-button2')?.addEventListener('click', 
-            () => this.showLoginFromMenu());
-    }
-
-    toggleForm(type) {
-        const isHidden = this.forms[type].style.display === DISPLAY_STATES.NONE;
-        this.forms[type].style.display = isHidden ? DISPLAY_STATES.FLEX : DISPLAY_STATES.NONE;
-        
-        // Ocultar el otro formulario
-        const otherType = type === 'login' ? 'register' : 'login';
-        this.forms[otherType].style.display = DISPLAY_STATES.NONE;
-    }
-
-    showLoginFromMenu() {
-        if (this.forms.login.style.display === DISPLAY_STATES.NONE) {
-            this.forms.login.style.display = DISPLAY_STATES.FLEX;
-            menuHandler.hideMenu();
-        }
+        document.getElementById('register-button')?.addEventListener('click', () => {
+            this.loginModal.hide();
+            this.registerModal.show();
+        });
     }
 }
+
 class NavigationHandler {
     constructor() {
         this.setupLogout();
@@ -84,10 +68,8 @@ class NavigationHandler {
     }
 }
 
-// Inicialización cuando el DOM está listo
 window.addEventListener('DOMContentLoaded', () => {
     window.menuHandler = new MenuHandler();
     new FormHandler();
     new NavigationHandler();
 });
-

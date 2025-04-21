@@ -16,6 +16,10 @@ header{
     
     nav a{
         color: #fff;
+
+        i {
+            color: #fff;
+        }
     }
 }
 
@@ -221,9 +225,16 @@ a:hover {
         padding: 8px 16px;
         font-size: 14px;
     }
+    
+    .ypdl {
+        width: 100%;
+    
+        input{
+            width: 200px;
+        }
+    }
 }
 
-/* Dispositivos medianos (tablets, 601px a 900px) */
 @media only screen and (min-width: 601px) and (max-width: 900px) {
     .name h1 {
         font-size: 1.8em;
@@ -240,9 +251,16 @@ a:hover {
     .download-form {
         width: 80%;
     }
+
+    .ypdl {
+        width: 100%;
+    
+        input{
+            width: 200px;
+        }
+    }
 }
 
-/* Dispositivos grandes (laptops/desktops, 901px y más) */
 @media only screen and (min-width: 901px) {
     .name h1 {
         font-size: 2em;
@@ -264,9 +282,15 @@ a:hover {
     input[type="text"]:focus {
         transform: scale(1.02);
     }
+    .ypdl {
+        width: 100%;
+    
+        input{
+            width: 200px;
+        }
+    }
 }
 
-/* Soporte para pantallas de alta densidad */
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
        only screen and (min-resolution: 192dpi) {
     img {
@@ -286,6 +310,14 @@ a:hover {
 @media (max-width: 600px) {
     #menu-white {
         display: flex;
+    }
+
+    .ypdl {
+        width: 100%;
+    
+        input{
+            width: 200px;
+        }
     }
 }
 

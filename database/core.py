@@ -105,10 +105,7 @@ class DatabaseManager:
                 if attempt < max_retries - 1:
                     time.sleep(retry_delay)
                     continue
-                
-        error_msg = f"Failed to create connection pool after {max_retries} attempts. Last error: {last_error}"
-        logger.error(error_msg)
-        raise DatabaseError(error_msg)
+                raise DatabaseError(f"Failed to setup connection pool after {max_retries} attempts: {last_error}")
 
     @contextmanager
     def get_connection(self):
@@ -118,61 +115,52 @@ class DatabaseManager:
             conn = self._pool.get_connection()
             yield conn
         except Error as e:
-            logger.error(f"Database connection error: {e}")
-            raise DatabaseError(f"Database connection failed: {e}")
+            raise DatabaseError(f"Error getting connection from pool: {e}")
         finally:
-            if conn and conn.is_connected():
-                conn.close()
-                logger.debug("Database connection closed")
+            if conn:
+                try:
+                    conn.close()
+                except Error:
+                    pass
 
     @retry_on_error()
-    def execute_query(self, query, params=None):
+    def execute_query(self, query, params=None, fetch_one=False, fetch_all=False, return_last_id=False):
         """Ejecutar una consulta con reintentos automáticos"""
         with self.get_connection() as conn:
-            cursor = None
-            try:
-                cursor = conn.cursor(dictionary=True, buffered=True)
-                cursor.execute(query, params or ())
-                
-                # Si es un SELECT, devolver resultados
-                if query.strip().upper().startswith('SELECT'):
-                    result = cursor.fetchall()
-                else:
-                    conn.commit()
-                    result = None
+            with conn.cursor() as cursor:
+                try:
+                    cursor.execute(query, params)
                     
-                return result
-            except Error as e:
-                if conn.is_connected():
+                    if return_last_id:
+                        return cursor.lastrowid
+                    elif fetch_one:
+                        return cursor.fetchone()
+                    elif fetch_all:
+                        return cursor.fetchall()
+                    return True
+                    
+                except Error as e:
                     conn.rollback()
-                logger.error(f"Query execution failed: {e}\nQuery: {query}\nParams: {params}")
-                raise
-            finally:
-                if cursor:
-                    # Consumir cualquier resultado no leído
-                    try:
-                        while cursor.nextset():
-                            pass
-                    except:
-                        pass
-                    cursor.close()
+                    raise DatabaseError(f"Error executing query: {e}")
 
+    @retry_on_error()
     def execute_many(self, query, params_list):
         """Ejecutar múltiples consultas en una transacción"""
         with self.get_connection() as conn:
-            cursor = conn.cursor()
-            try:
-                conn.start_transaction()
-                cursor.executemany(query, params_list)
-                conn.commit()
-            except Error as e:
-                conn.rollback()
-                logger.error(f"Batch execution failed: {e}\nQuery: {query}")
-                raise DatabaseError(f"Batch execution failed: {e}")
-            finally:
-                cursor.close()
+            with conn.cursor() as cursor:
+                try:
+                    conn.start_transaction()
+                    cursor.executemany(query, params_list)
+                    conn.commit()
+                except Error as e:
+                    conn.rollback()
+                    logger.error(f"Batch execution failed: {e}\nQuery: {query}")
+                    raise DatabaseError(f"Batch execution failed: {e}")
+                finally:
+                    cursor.close()
 
-    def health_check(self):
+    @retry_on_error()
+    def health_check(self) -> bool:
         """Verificar el estado de la conexión"""
         try:
             with self.get_connection() as conn:
@@ -184,25 +172,120 @@ class DatabaseManager:
             logger.error(f"Health check failed: {e}")
             return False
 
+    # Funciones de Usuario
+    @retry_on_error()
+    def create_user(self, username: str, email: str, password: str) -> int:
+        """Crear un nuevo usuario"""
+        query = "INSERT INTO USER (username, email, password) VALUES (%s, %s, %s)"
+        params = (username, email, password)
+        return self.execute_query(query, params, return_last_id=True)
+
+    @retry_on_error()
+    def get_user_by_id(self, user_id: int) -> dict:
+        """Obtener usuario por ID"""
+        query = "SELECT id, username, email, created_at, last_login, is_active FROM USER WHERE id = %s"
+        result = self.execute_query(query, (user_id,), fetch_one=True)
+        return dict(zip(['id', 'username', 'email', 'created_at', 'last_login', 'is_active'], result)) if result else None
+
+    @retry_on_error()
+    def get_user_by_username(self, username: str) -> dict:
+        """Obtener usuario por nombre de usuario"""
+        query = "SELECT id, username, email, password, created_at, last_login, is_active FROM USER WHERE username = %s"
+        result = self.execute_query(query, (username,), fetch_one=True)
+        return dict(zip(['id', 'username', 'email', 'password', 'created_at', 'last_login', 'is_active'], result)) if result else None
+
+    @retry_on_error()
+    def update_user_last_login(self, user_id: int) -> bool:
+        """Actualizar última fecha de inicio de sesión"""
+        query = "UPDATE USER SET last_login = CURRENT_TIMESTAMP WHERE id = %s"
+        return self.execute_query(query, (user_id,))
+
+    @retry_on_error()
+    def update_user(self, user_id: int, username: str = None, email: str = None, password: str = None, is_active: bool = None) -> bool:
+        """Actualizar información del usuario"""
+        updates = []
+        params = []
+
+        if username is not None:
+            updates.append("username = %s")
+            params.append(username)
+
+        if email is not None:
+            updates.append("email = %s")
+            params.append(email)
+
+        if password is not None:
+            updates.append("password = %s")
+            params.append(password)
+
+        if is_active is not None:
+            updates.append("is_active = %s")
+            params.append(is_active)
+
+        if not updates:
+            return False
+
+        query = f"UPDATE USER SET {', '.join(updates)} WHERE id = %s"
+        params.append(user_id)
+        return self.execute_query(query, tuple(params))
+
+    @retry_on_error()
+    def delete_user(self, user_id: int) -> bool:
+        """Eliminar usuario"""
+        query = "DELETE FROM USER WHERE id = %s"
+        return self.execute_query(query, (user_id,))
+
+    # Funciones de Historial de Descargas
+    @retry_on_error()
+    def register_download(self, user_id: int, url: str, filename: str, status: str, error_message: str = None) -> int:
+        """Registrar una nueva descarga"""
+        query = "CALL register_download(%s, %s, %s, %s, %s)"
+        params = (user_id, url, filename, status, error_message)
+        return self.execute_query(query, params, return_last_id=True)
+
+    @retry_on_error()
+    def get_user_downloads(self, user_id: int, limit: int = 10, offset: int = 0) -> list:
+        """Obtener historial de descargas de un usuario"""
+        query = """
+        SELECT id, url, filename, download_date, status, error_message 
+        FROM DOWNLOAD_HISTORY 
+        WHERE user_id = %s 
+        ORDER BY download_date DESC 
+        LIMIT %s OFFSET %s
+        """
+        results = self.execute_query(query, (user_id, limit, offset), fetch_all=True)
+        return [dict(zip(['id', 'url', 'filename', 'download_date', 'status', 'error_message'], row)) for row in results]
+
+    @retry_on_error()
+    def get_download_by_id(self, download_id: int) -> dict:
+        """Obtener una descarga específica por ID"""
+        query = "SELECT id, user_id, url, filename, download_date, status, error_message FROM DOWNLOAD_HISTORY WHERE id = %s"
+        result = self.execute_query(query, (download_id,), fetch_one=True)
+        return dict(zip(['id', 'user_id', 'url', 'filename', 'download_date', 'status', 'error_message'], result)) if result else None
+
+    @retry_on_error()
+    def get_download_stats(self, user_id: int) -> dict:
+        """Obtener estadísticas de descargas de un usuario"""
+        query = """
+        SELECT 
+            COUNT(*) as total_downloads,
+            SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) as successful_downloads,
+            SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed_downloads
+        FROM DOWNLOAD_HISTORY
+        WHERE user_id = %s
+        """
+        result = self.execute_query(query, (user_id,), fetch_one=True)
+        return dict(zip(['total_downloads', 'successful_downloads', 'failed_downloads'], result)) if result else None
+
+    @retry_on_error()
+    def delete_download_history(self, user_id: int, download_id: int = None) -> bool:
+        """Eliminar historial de descargas de un usuario"""
+        if download_id:
+            query = "DELETE FROM DOWNLOAD_HISTORY WHERE user_id = %s AND id = %s"
+            return self.execute_query(query, (user_id, download_id))
+        else:
+            query = "DELETE FROM DOWNLOAD_HISTORY WHERE user_id = %s"
+            return self.execute_query(query, (user_id,))
+
 # Instancia global del manejador de base de datos
 db = DatabaseManager()
-
-# Ejemplo de uso:
-'''
-if __name__ == "__main__":
-    try:
-        # Verificar la conexión
-        if db.health_check():
-            print("Database connection is healthy")
-            
-            # Ejemplo de consulta
-            result = db.execute_query("SELECT * FROM users WHERE id = %s", (1,))
-            print(f"Query result: {result}")
-            
-            # Ejemplo de inserción múltiple
-            users = [("user1", "pass1"), ("user2", "pass2")]
-            db.execute_many("INSERT INTO users (username, password) VALUES (%s, %s)", users)
-            
-    except DatabaseError as e:
-        print(f"Database error: {e}")
-'''

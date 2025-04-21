@@ -2,14 +2,12 @@ from flask import Flask, session, redirect, url_for,flash
 from routes import index, download, downs, interfaces, sessions
 import os
 
-
 app = Flask(__name__)
 app.secret_key = 'JODIAJEOIHDEUAHDOIHEAOUFHKALBAGCLIGFULE'
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 DOWNLOAD_FOLDER = os.path.join(BASE_DIR, "downloads")
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
-
 
 def limpiar_carpeta():
     for archivo in os.listdir(DOWNLOAD_FOLDER):
@@ -38,11 +36,13 @@ def logout_route():
     
 @app.route('/spotify-downloader', methods=["GET", "POST"])
 def spotify_downloader():
-    return interfaces.spotify()
+    session_user = session.get('user')
+    return interfaces.spotify(session_user=session_user)
 
 @app.route('/youtube-downloader', methods=["GET", "POST"])
 def youtube_downloader():
-    return interfaces.youtube()
+    session_user = session.get('user')
+    return interfaces.youtube(session_user=session_user)
 
 @app.route('/soundcloud-downloader', methods=["GET", "POST"])
 def soundcloud_route():

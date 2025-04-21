@@ -1,49 +1,49 @@
-<header>
-    <div class="logo">
-        <a href="/" style="display: flex; justify-content: center; align-items: center; color: black; text-decoration: none;">            
-            <img src="{{ url_for('static', filename='img/LOGO.png') }}" alt="Logo">
-            <h1>MRZDOWNLOADER</h1>
+<header class="navbar navbar-expand-lg py-3 {{ 'bg-success' if request.endpoint == 'spotify_downloader' else 'bg-danger' if request.endpoint == 'youtube_downloader' else 'bg-primary' if request.endpoint == 'soundcloud_downloader' else 'bg-dark' }}">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center text-white" href="/">
+            <img src="{{ url_for('static', filename='img/LOGO.png') }}" alt="Logo" height="40" class="me-2">
+            <h1 class="h4 mb-0">MRZDOWNLOADER</h1>
         </a>
-    </div>
-    {% if not session_user %}    
-    <nav>
-        <select name="downloader" id="downloader" class="styled-select">
-            <option value="/spotify-downloader" class="spotifyD">SPOTIFY</option>
-            <option value="/youtube-downloader" class="youtubeD">YOUTUBE</option>
-            <option value="/soundcloud-downloader" class="soundcloudD">SOUNDCLOUD</option>
-        </select>
-        <button id="login-button">Login</button>
-        <button id="register-button">Register</button>
-    </nav>
-    {% else %}
-    <nav>
-        <select name="downloader" id="downloader" class="styled-select">
-            <option value="/spotify-downloader" class="spotifyD">SPOTIFY</option>
-            <option value="/youtube-downloader" class="youtubeD">YOUTUBE</option>
-            <option value="/soundcloud-downloader" class="soundcloudD">SOUNDCLOUD</option>
-        </select>
-        <p>{{session_user[1]}}</p>
-        <a href="/logout">LOGOUT</a>
-    </nav>
-    {% endif %}
 
-    <button id="menu-black"><img src="{{ url_for('static', filename='img/menu.svg') }}" alt=""></button>
-    <button id="menu-white"><img src="{{ url_for('static', filename='img/menu white.svg') }}" alt=""></button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    {% if not session_user %}
-    <div class="menu hidden">
-        <a href="/spotify-downloader" class="spotify">SPOTIFY</a>
-        <a href="/youtube-downloader" class="youtube">YOUTUBE</a>
-        <a href="/soundcloud-downloader" class="soundcloud">SOUNDCLOUD</a>
-        <button id="login-button2">Login</button>
-        <button id="register-button2">Register</button>
-    </div>
-    {% else %}
-    <div class="menu hidden">
-        <a href="/spotify-downloader" class="spotify">SPOTIFY</a>
-        <a href="/youtube-downloader" class="youtube">YOUTUBE</a>
-        <a href="/soundcloud-downloader" class="soundcloud">SOUNDCLOUD</a>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if request.endpoint == 'spotify_downloader' }} text-white" href="/spotify-downloader">
+                        <i class="fab fa-spotify me-1"></i> SPOTIFY
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if request.endpoint == 'youtube_downloader' }} text-white" href="/youtube-downloader">
+                        <i class="fab fa-youtube me-1"></i> YOUTUBE
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ 'active' if request.endpoint == 'soundcloud_downloader' }} text-white" href="/soundcloud-downloader">
+                        <i class="fab fa-soundcloud me-1"></i> SOUNDCLOUD
+                    </a>
+                </li>
+            </ul>
 
+            <!-- Botones de autenticación -->
+            <div class="d-flex align-items-center">
+                {% if not session_user %}
+                <button type="button" class="btn btn-outline-light me-2" id="login-button" data-bs-toggle="modal" data-bs-target="#login-form">
+                    <i class="fas fa-sign-in-alt me-1"></i> Login
+                </button>
+                <a href="/register" class="btn btn-light" id="register-button">
+                    <i class="fas fa-user-plus me-1"></i> Register
+                </a>
+                {% else %}
+                <span class="text-white me-3">{{session_user[1]}}</span>
+                <a href="/logout" class="btn btn-outline-light">
+                    <i class="fas fa-sign-out-alt me-1"></i> LOGOUT
+                </a>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    {% endif %}
-    </header>
+</header>
