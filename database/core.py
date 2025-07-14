@@ -12,11 +12,11 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 DB_CONFIG = {
-    'host': os.getenv('DB_HOST', 'crossover.proxy.rlwy.net'),
-    'user': os.getenv('DB_USER', 'root'),
-    'password': os.getenv('DB_PASSWORD', 'gMwwIIYRfHPZkaVoRzYJXELGUyyisdkr'),
-    'database': os.getenv('DB_NAME', 'railway'),
-    'port': int(os.getenv('DB_PORT', '10662')),
+    'host': os.getenv('DB_HOST', 'bvkqasbg866s0wttyamf-mysql.services.clever-cloud.com'),
+    'user': os.getenv('DB_USER', 'uiovaybiektnjsrq'),
+    'password': os.getenv('DB_PASSWORD', '7phgrWYpeBPwzM3YqmD'),
+    'database': os.getenv('DB_NAME', 'bvkqasbg866s0wttyamf'),
+    'port': int(os.getenv('DB_PORT', '1020748662')),
     'pool_name': 'mypool',
     'pool_size': 3,  # Reduced pool size for better stability
     'connect_timeout': 30,  # Increased timeout
