@@ -23,8 +23,8 @@ CACHE_FOLDER = os.path.join(BASE_DIR, "cache")
 COOKIES_FILE = os.path.join(BASE_DIR, "cookies.txt")
 
 # Configuración de FFmpeg
-FFMPEG_BIN = "/root/.spotdl"
-FFMPEG_PATH = os.path.join(FFMPEG_BIN, "ffmpeg")
+FFMPEG_BIN = "/usr/bin/ffmpeg"
+FFMPEG_PATH = os.path.join(FFMPEG_BIN)
 
 # Configurar el PATH para incluir FFmpeg
 os.environ["PATH"] = FFMPEG_BIN + os.pathsep + os.environ.get("PATH", "")
@@ -488,3 +488,4 @@ def download_spdl(session_user):
             "suggestion": "Asegúrese de tener spotdl y ffmpeg instalados correctamente",
             "traceback": error_traceback
         }), 500
+
